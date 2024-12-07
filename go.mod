@@ -1,3 +1,3 @@
-module github.com/robfig/cron/v3
+module github.com/ilaorou/cron
 
 go 1.12
