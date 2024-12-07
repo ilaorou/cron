@@ -263,6 +263,14 @@ func getRange(expr string, r bounds) (uint64, error) {
 		start = r.min
 		end = r.max
 		extra = starBit
+	} else if lowAndHigh[0] == "#" && singleDigit {
+		step, err = mustParseInt(rangeAndStep[1])
+		if err != nil || step < 2 {
+			return 0, err
+		}
+		start = step - 1
+		end = r.max
+		extra = starBit
 	} else {
 		start, err = parseIntOrName(lowAndHigh[0], r.names)
 		if err != nil {

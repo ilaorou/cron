@@ -271,6 +271,26 @@ func TestRunningJobTwice(t *testing.T) {
 	}
 }
 
+func TestStock(t *testing.T) {
+	wg := &sync.WaitGroup{}
+	wg.Add(5)
+
+	cron := newWithSeconds()
+	cron.AddFunc("30 #/2 * * * ?", func() {
+		t.Log(time.Now())
+		wg.Done()
+	})
+	cron.Start()
+	defer cron.Stop()
+
+	// Give cron 2 seconds to run our job (which is always activated).
+	select {
+	case <-time.After(time.Minute * 10):
+		t.Fatal("expected job runs")
+	case <-wait(wg):
+	}
+}
+
 func TestRunningMultipleSchedules(t *testing.T) {
 	wg := &sync.WaitGroup{}
 	wg.Add(2)
